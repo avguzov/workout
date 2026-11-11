@@ -1,0 +1,1517 @@
+{
+  "schema_version": 1,
+  "units": "lb",
+  "default_equipment": {
+    "adjustable": {"present": true, "min_lb": 5, "max_lb": 50, "step_lb": 5},
+    "fixed_pairs_lb": [10, 15, 20, 25],
+    "bench": {"present": true, "incline": true},
+    "pull_up_bar": false,
+    "bands": false
+  },
+  "timing": {
+    "transition_sec": 15,
+    "rest_between_rounds_sec": {"A": 70, "B": 45, "C": 45},
+    "between_blocks_sec": 105,
+    "warm_up_sec": 300
+  },
+  "roles": [
+    {"id": "heavy_press", "label": "Heavy press"},
+    {"id": "heavy_row", "label": "Heavy row or pull"},
+    {"id": "heavy_legs", "label": "Heavy squat or lunge"},
+    {"id": "deadlift", "label": "Deadlift"},
+    {"id": "athletic_hinge", "label": "Athletic hinge"},
+    {"id": "push_up", "label": "Push-up"},
+    {"id": "overhead_press", "label": "Overhead press or thruster"},
+    {"id": "lunge", "label": "Lunge or step-up"},
+    {"id": "loaded_core", "label": "Carry or loaded core"},
+    {"id": "biceps", "label": "Biceps"},
+    {"id": "triceps", "label": "Triceps"},
+    {"id": "shoulders", "label": "Shoulders"},
+    {"id": "chest_accessory", "label": "Chest accessory"},
+    {"id": "core", "label": "Core"}
+  ],
+  "movements": [
+    {
+      "id": "db-bench-press",
+      "name": "DB Bench Press",
+      "patterns": ["push"],
+      "roles": ["heavy_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 25,
+      "equivalents": ["db-floor-press", "incline-db-bench", "single-arm-db-bench-press"],
+      "harder_variation": {"id": "single-arm-db-bench-press"},
+      "cues": [
+        "Pin your shoulder blades back and down on the bench",
+        "Lower the dumbbells to mid-chest with elbows about 45 degrees out",
+        "Press up and slightly in until your arms are straight"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+bench+press+form"
+    },
+    {
+      "id": "1-arm-db-row",
+      "name": "1-Arm DB Row",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 45,
+      "equivalents": ["gorilla-row", "db-bent-over-row", "chest-supported-row"],
+      "harder_variation": {
+        "name": "Unsupported 1-Arm DB Row",
+        "how": "Row from a split-stance hinge with no hand on the bench, so your trunk has to resist the twist"
+      },
+      "cues": [
+        "Keep your back flat and close to parallel with the floor",
+        "Pull the dumbbell toward your hip, not your armpit",
+        "Let the arm hang straight at the bottom of each rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=one+arm+dumbbell+row+form"
+    },
+    {
+      "id": "goblet-squat",
+      "name": "Goblet Squat",
+      "patterns": ["squat"],
+      "roles": ["heavy_legs"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["bulgarian-split-squat", "cossack-squat", "lateral-lunge"],
+      "harder_variation": {
+        "name": "Double DB Front Squat",
+        "how": "Rack both dumbbells on your shoulders with elbows high and squat to the same depth"
+      },
+      "cues": [
+        "Hold the dumbbell upright against your chest",
+        "Sit down between your heels with your chest up",
+        "Push your knees out in line with your toes"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+goblet+squat+form"
+    },
+    {
+      "id": "rdl-to-row",
+      "name": "RDL-to-Row",
+      "patterns": ["hinge", "pull"],
+      "roles": ["athletic_hinge", "heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 40,
+      "equivalents": ["b-stance-rdl", "db-romanian-deadlift", "db-bent-over-row"],
+      "harder_variation": {
+        "name": "Single-Leg RDL-to-Row",
+        "how": "Hinge on one leg with a dumbbell in the opposite hand, row once at the bottom, then stand; switch legs halfway through the set"
+      },
+      "cues": [
+        "Push your hips back until the dumbbells pass your knees",
+        "Row both dumbbells to your ribs while you hold the hinge",
+        "Lower the dumbbells, then drive your hips forward to stand"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+romanian+deadlift+to+row+form"
+    },
+    {
+      "id": "t-push-up",
+      "name": "T-Push-Up",
+      "patterns": ["push"],
+      "roles": ["push_up", "chest_accessory"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 16, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["spiderman-push-up", "decline-push-up"],
+      "harder_variation": null,
+      "cues": [
+        "Do a full push-up with your body in one straight line",
+        "At the top, rotate onto one hand and reach the other arm to the ceiling",
+        "Alternate sides each rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=t+push+up+form"
+    },
+    {
+      "id": "curl-to-press",
+      "name": "Curl-to-Press",
+      "patterns": ["accessory", "push"],
+      "roles": ["biceps", "overhead_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 8, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 20, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["db-curl", "hammer-curl", "half-kneeling-single-arm-press"],
+      "harder_variation": null,
+      "cues": [
+        "Curl both dumbbells to your shoulders with elbows close",
+        "Turn your palms forward and press straight overhead",
+        "Brace your abs so your lower back does not arch"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+curl+to+press+form"
+    },
+    {
+      "id": "skull-crusher",
+      "name": "Skull Crusher",
+      "patterns": ["accessory"],
+      "roles": ["triceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 15, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 25,
+      "equivalents": ["overhead-triceps-extension", "tricep-kickback", "tate-press"],
+      "harder_variation": null,
+      "cues": [
+        "Lie on the bench with the dumbbells above your shoulders",
+        "Bend only at the elbows to bring the dumbbells beside your head",
+        "Keep your upper arms still as you straighten"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+skull+crusher+form"
+    },
+    {
+      "id": "lateral-raise",
+      "name": "Lateral Raise",
+      "patterns": ["accessory"],
+      "roles": ["shoulders"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 10, "max": 20, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 10, "fixed_only": false},
+      "progression": "light",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["y-raise", "rear-delt-fly"],
+      "harder_variation": null,
+      "cues": [
+        "Raise the dumbbells out to the sides to shoulder height",
+        "Lead with your elbows, slightly bent",
+        "Keep your shoulders down away from your ears"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+lateral+raise+form"
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "seconds", "default": 60, "min": 30, "max": 90, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "timed",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 60,
+      "equivalents": ["bear-hold", "hollow-hold", "side-plank"],
+      "harder_variation": null,
+      "cues": [
+        "Set your elbows under your shoulders",
+        "Squeeze your glutes and keep your hips level with your shoulders",
+        "Breathe steadily without letting your lower back sag"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=forearm+plank+form"
+    },
+    {
+      "id": "db-deadlift-from-floor",
+      "name": "DB Deadlift from floor",
+      "patterns": ["hinge"],
+      "roles": ["deadlift"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 10, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 50, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["db-sumo-deadlift", "db-romanian-deadlift", "b-stance-rdl"],
+      "harder_variation": {
+        "name": "Deficit DB Deadlift",
+        "how": "Stand on a 2-inch step or plate so the dumbbells start lower than your feet, then pull as usual"
+      },
+      "cues": [
+        "Set the dumbbells beside your feet and hinge down with a flat back",
+        "Push the floor away and stand tall",
+        "Keep the dumbbells close to your legs the whole way"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+deadlift+from+floor+form"
+    },
+    {
+      "id": "decline-push-up",
+      "name": "Decline Push-Up",
+      "patterns": ["push"],
+      "roles": ["push_up", "chest_accessory"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 20, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 25,
+      "equivalents": ["t-push-up", "spiderman-push-up"],
+      "harder_variation": null,
+      "cues": [
+        "Put your feet on the bench and your hands on the floor, just wider than your shoulders",
+        "Keep a straight line from heels to head",
+        "Lower until your chest is close to the floor, then push up"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=decline+push+up+feet+on+bench+form"
+    },
+    {
+      "id": "renegade-row",
+      "name": "Renegade Row",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": true},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["renegade-row-with-push-up", "gorilla-row", "1-arm-db-row"],
+      "harder_variation": {"id": "renegade-row-with-push-up"},
+      "cues": [
+        "Hold a plank on the dumbbells with your feet wide",
+        "Row one dumbbell to your hip without twisting your hips",
+        "Alternate sides each rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+renegade+row+form"
+    },
+    {
+      "id": "db-thruster",
+      "name": "DB Thruster",
+      "patterns": ["squat", "push"],
+      "roles": ["overhead_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["curl-to-press", "half-kneeling-single-arm-press"],
+      "harder_variation": null,
+      "cues": [
+        "Hold the dumbbells at your shoulders and squat to full depth",
+        "Drive up and use that momentum to press overhead",
+        "Bring the dumbbells back to your shoulders as you start the next squat"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+thruster+form"
+    },
+    {
+      "id": "front-rack-reverse-lunge",
+      "name": "Front-Rack Reverse Lunge",
+      "patterns": ["lunge"],
+      "roles": ["lunge", "heavy_legs"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 45,
+      "equivalents": ["reverse-lunge", "front-rack-step-up", "bulgarian-split-squat"],
+      "harder_variation": {
+        "name": "Deficit Front-Rack Reverse Lunge",
+        "how": "Stand on a 2-inch step or plate and step back off it so the back knee travels lower"
+      },
+      "cues": [
+        "Rest the dumbbells on your shoulders with elbows forward",
+        "Step back and lower until the back knee nearly touches the floor",
+        "Push through the front heel to return to standing"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+front+rack+reverse+lunge+form"
+    },
+    {
+      "id": "dead-bug",
+      "name": "Dead Bug",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 15, "per_side": true},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 40,
+      "equivalents": ["weighted-dead-bug", "bird-dog", "hollow-hold"],
+      "harder_variation": {"id": "weighted-dead-bug"},
+      "cues": [
+        "Press your lower back into the floor for the whole set",
+        "Reach the opposite arm and leg out at the same time",
+        "Exhale as you extend, then return and switch sides"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dead+bug+exercise+form"
+    },
+    {
+      "id": "db-curl",
+      "name": "DB Curl",
+      "patterns": ["accessory"],
+      "roles": ["biceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 20, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 20,
+      "equivalents": ["hammer-curl", "zottman-curl", "concentration-curl"],
+      "harder_variation": null,
+      "cues": [
+        "Keep your elbows pinned to your sides",
+        "Curl with palms up until the dumbbells reach your shoulders",
+        "Lower until your arms are fully straight"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+biceps+curl+form"
+    },
+    {
+      "id": "overhead-triceps-extension",
+      "name": "Overhead Triceps Extension",
+      "patterns": ["accessory"],
+      "roles": ["triceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["skull-crusher", "tricep-kickback", "tate-press"],
+      "harder_variation": null,
+      "cues": [
+        "Hold one dumbbell overhead with both hands under the top plate",
+        "Lower it behind your head by bending only at the elbows",
+        "Keep your elbows pointed forward and your ribs down"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+overhead+triceps+extension+form"
+    },
+    {
+      "id": "side-plank",
+      "name": "Side Plank",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "seconds", "default": 30, "min": 20, "max": 60, "per_side": true},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "timed",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 65,
+      "equivalents": ["plank", "bear-hold", "suitcase-carry"],
+      "harder_variation": null,
+      "cues": [
+        "Stack your elbow under your shoulder",
+        "Lift your hips so your body forms a straight line",
+        "Hold for the target time, then switch sides"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=side+plank+form"
+    },
+    {
+      "id": "chest-supported-row",
+      "name": "Chest-Supported Row",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "incline"},
+      "seconds_per_round": 25,
+      "equivalents": ["db-bent-over-row", "gorilla-row", "1-arm-db-row"],
+      "harder_variation": {"id": "db-bent-over-row"},
+      "cues": [
+        "Lie chest down on the incline bench with your feet planted",
+        "Row both dumbbells until your elbows pass your ribs",
+        "Let your arms hang straight between reps"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+chest+supported+row+form"
+    },
+    {
+      "id": "incline-db-bench",
+      "name": "Incline DB Bench",
+      "patterns": ["push"],
+      "roles": ["heavy_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "incline"},
+      "seconds_per_round": 25,
+      "equivalents": ["db-bench-press", "db-floor-press", "single-arm-db-bench-press"],
+      "harder_variation": {
+        "name": "Single-Arm Incline DB Bench Press",
+        "how": "Press one dumbbell at a time on the incline with the free hand on your hip, keeping your shoulders square"
+      },
+      "cues": [
+        "Set the bench to a low incline and keep your shoulder blades back",
+        "Lower the dumbbells to your upper chest",
+        "Press up until your arms are straight over your shoulders"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=incline+dumbbell+bench+press+form"
+    },
+    {
+      "id": "db-pullover",
+      "name": "DB Pullover",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 30,
+      "equivalents": ["chest-supported-row", "gorilla-row", "db-bent-over-row"],
+      "harder_variation": {
+        "name": "Cross-Bench DB Pullover",
+        "how": "Lie across the bench with only your upper back on it and your hips low, which lengthens the stretch at the bottom"
+      },
+      "cues": [
+        "Hold one dumbbell with both hands over your chest, elbows soft",
+        "Lower it behind your head until you feel your lats stretch",
+        "Pull it back over your chest without bending your elbows more"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+pullover+form"
+    },
+    {
+      "id": "single-leg-rdl",
+      "name": "Single-Leg RDL",
+      "patterns": ["hinge"],
+      "roles": ["athletic_hinge"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 50,
+      "equivalents": ["b-stance-rdl", "db-romanian-deadlift", "rdl-to-row"],
+      "harder_variation": null,
+      "cues": [
+        "Stand on one leg with a soft knee",
+        "Hinge forward as the free leg reaches back, keeping your hips square",
+        "Stand tall by squeezing the glute of the standing leg"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+single+leg+romanian+deadlift+form"
+    },
+    {
+      "id": "front-rack-step-up",
+      "name": "Front-Rack Step-Up",
+      "patterns": ["lunge"],
+      "roles": ["lunge"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 6, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 40,
+      "equivalents": ["front-rack-reverse-lunge", "reverse-lunge", "bulgarian-split-squat"],
+      "harder_variation": null,
+      "cues": [
+        "Rest the dumbbells on your shoulders with elbows forward",
+        "Put your whole foot on the bench and drive through that heel",
+        "Step down and finish all reps on one leg before switching"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+front+rack+step+up+form"
+    },
+    {
+      "id": "hammer-curl",
+      "name": "Hammer Curl",
+      "patterns": ["accessory"],
+      "roles": ["biceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 20, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 20,
+      "equivalents": ["db-curl", "zottman-curl", "concentration-curl"],
+      "harder_variation": null,
+      "cues": [
+        "Hold the dumbbells with palms facing each other",
+        "Keep your elbows at your sides as you curl",
+        "Straighten your arms fully at the bottom"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+hammer+curl+form"
+    },
+    {
+      "id": "rear-delt-fly",
+      "name": "Rear-Delt Fly",
+      "patterns": ["accessory"],
+      "roles": ["shoulders"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 15, "min": 10, "max": 20, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 10, "fixed_only": false},
+      "progression": "light",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["lateral-raise", "y-raise"],
+      "harder_variation": null,
+      "cues": [
+        "Hinge forward until your torso is close to parallel with the floor",
+        "Raise the dumbbells out wide with a slight bend in the elbows",
+        "Keep your neck long and your shoulders away from your ears"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+rear+delt+fly+form"
+    },
+    {
+      "id": "db-fly",
+      "name": "DB Fly",
+      "patterns": ["accessory"],
+      "roles": ["chest_accessory"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 15, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-squeeze-press", "t-push-up", "spiderman-push-up"],
+      "harder_variation": null,
+      "cues": [
+        "Lie on the bench with the dumbbells over your chest, palms facing",
+        "Open your arms wide with a slight elbow bend until your chest stretches",
+        "Bring the dumbbells back together along the same arc"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+chest+fly+form"
+    },
+    {
+      "id": "hollow-hold",
+      "name": "Hollow Hold",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "seconds", "default": 30, "min": 20, "max": 60, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "timed",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["plank", "dead-bug", "bear-hold"],
+      "harder_variation": null,
+      "cues": [
+        "Press your lower back into the floor",
+        "Lift your shoulders and legs a few inches off the floor",
+        "Bend your knees if your lower back starts to lift"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=hollow+body+hold+form"
+    },
+    {
+      "id": "single-arm-db-bench-press",
+      "name": "Single-Arm DB Bench Press",
+      "patterns": ["push"],
+      "roles": ["heavy_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 45,
+      "equivalents": ["db-bench-press", "single-arm-floor-press", "db-floor-press"],
+      "harder_variation": {
+        "name": "Off-Bench Single-Arm DB Press",
+        "how": "Slide over so only the non-working shoulder blade is on the bench, then press while bracing to stay level"
+      },
+      "cues": [
+        "Hold the bench edge or your hip with the free hand",
+        "Brace your abs so your torso does not roll toward the dumbbell",
+        "Lower to chest level and press straight up"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=single+arm+dumbbell+bench+press+form"
+    },
+    {
+      "id": "gorilla-row",
+      "name": "Gorilla Row",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["1-arm-db-row", "db-bent-over-row", "renegade-row"],
+      "harder_variation": {
+        "name": "Deficit Gorilla Row",
+        "how": "Stand on a 2-inch step or plate so each row starts lower and travels farther"
+      },
+      "cues": [
+        "Stand wide with both dumbbells on the floor between your feet",
+        "Hinge with a flat back and your knees bent",
+        "Row one dumbbell to your hip, then alternate sides"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+gorilla+row+form"
+    },
+    {
+      "id": "bulgarian-split-squat",
+      "name": "Bulgarian Split Squat",
+      "patterns": ["lunge"],
+      "roles": ["heavy_legs", "lunge"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 6, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 45,
+      "equivalents": ["front-rack-reverse-lunge", "reverse-lunge", "goblet-squat"],
+      "harder_variation": {
+        "name": "Front-Foot-Elevated Bulgarian Split Squat",
+        "how": "Stand the front foot on a 2-inch step or plate so you sink deeper on each rep"
+      },
+      "cues": [
+        "Rest the top of your back foot on the bench",
+        "Drop the back knee straight down toward the floor",
+        "Drive through the front heel to stand"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+bulgarian+split+squat+form"
+    },
+    {
+      "id": "b-stance-rdl",
+      "name": "B-Stance RDL",
+      "patterns": ["hinge"],
+      "roles": ["athletic_hinge", "deadlift"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 45,
+      "equivalents": ["single-leg-rdl", "db-romanian-deadlift", "rdl-to-row"],
+      "harder_variation": {"id": "single-leg-rdl"},
+      "cues": [
+        "Set the back toes beside the front heel for balance only",
+        "Keep most of your weight on the front leg",
+        "Hinge back with a flat back until the front hamstring stretches"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+b+stance+romanian+deadlift+form"
+    },
+    {
+      "id": "spiderman-push-up",
+      "name": "Spiderman Push-Up",
+      "patterns": ["push"],
+      "roles": ["push_up", "chest_accessory"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 20, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["t-push-up", "decline-push-up"],
+      "harder_variation": null,
+      "cues": [
+        "Bring one knee toward the same elbow as you lower",
+        "Keep your hips level with your shoulders",
+        "Alternate sides each rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=spiderman+push+up+form"
+    },
+    {
+      "id": "zottman-curl",
+      "name": "Zottman Curl",
+      "patterns": ["accessory"],
+      "roles": ["biceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 20, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-curl", "hammer-curl", "concentration-curl"],
+      "harder_variation": null,
+      "cues": [
+        "Curl up with your palms facing up",
+        "Turn your palms down at the top",
+        "Lower with palms down, then turn them up again at the bottom"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+zottman+curl+form"
+    },
+    {
+      "id": "tricep-kickback",
+      "name": "Tricep Kickback",
+      "patterns": ["accessory"],
+      "roles": ["triceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 15, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["overhead-triceps-extension", "skull-crusher", "tate-press"],
+      "harder_variation": null,
+      "cues": [
+        "Hinge forward and pin your upper arms to your sides",
+        "Straighten your elbows until your arms point back",
+        "Keep your upper arms still for the whole set"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+tricep+kickback+form"
+    },
+    {
+      "id": "russian-twist",
+      "name": "Russian Twist",
+      "patterns": ["core"],
+      "roles": ["core", "loaded_core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 20, "min": 12, "max": 30, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 15, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["bicycle-crunch", "weighted-sit-up", "weighted-dead-bug"],
+      "harder_variation": {
+        "name": "Feet-Up Russian Twist",
+        "how": "Lift your feet off the floor and keep them up for the whole set"
+      },
+      "cues": [
+        "Sit tall and lean back until your abs switch on",
+        "Rotate your shoulders to bring the dumbbell beside each hip",
+        "Count each side as one rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+russian+twist+form"
+    },
+    {
+      "id": "db-sumo-deadlift",
+      "name": "DB Sumo Deadlift",
+      "patterns": ["hinge"],
+      "roles": ["deadlift"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 50, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-deadlift-from-floor", "db-romanian-deadlift", "b-stance-rdl"],
+      "harder_variation": {
+        "name": "Deficit DB Sumo Deadlift",
+        "how": "Stand with each foot on a 2-inch step or plate so the dumbbells start below your feet"
+      },
+      "cues": [
+        "Take a wide stance with your toes turned out",
+        "Hold the dumbbells between your legs and keep your chest up",
+        "Push your knees out and stand by driving through your heels"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+sumo+deadlift+form"
+    },
+    {
+      "id": "renegade-row-with-push-up",
+      "name": "Renegade Row with Push-Up",
+      "patterns": ["push", "pull"],
+      "roles": ["heavy_row", "push_up"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 6, "min": 4, "max": 10, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": true},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["renegade-row", "t-push-up", "gorilla-row"],
+      "harder_variation": {
+        "name": "Narrow-Stance Renegade Row with Push-Up",
+        "how": "Bring your feet closer together so the plank has a smaller base during the rows"
+      },
+      "cues": [
+        "Do one push-up with your hands on the dumbbells",
+        "Row left, then right, keeping your hips square",
+        "Count one push-up plus two rows as one rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+renegade+row+with+push+up+form"
+    },
+    {
+      "id": "suitcase-carry",
+      "name": "Suitcase Carry",
+      "patterns": ["carry", "core"],
+      "roles": ["loaded_core", "core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "seconds", "default": 30, "min": 20, "max": 60, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 50, "fixed_only": false},
+      "progression": "timed",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 65,
+      "equivalents": ["russian-twist", "weighted-dead-bug", "side-plank"],
+      "harder_variation": null,
+      "cues": [
+        "Hold one heavy dumbbell at your side",
+        "Stand tall and do not lean toward or away from the weight",
+        "Walk short laps or march in place, then switch hands"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+suitcase+carry+form"
+    },
+    {
+      "id": "reverse-lunge-to-curl",
+      "name": "Reverse Lunge to Curl",
+      "patterns": ["lunge", "accessory"],
+      "roles": ["lunge"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 6, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 20, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 50,
+      "equivalents": ["reverse-lunge", "front-rack-reverse-lunge", "lateral-lunge"],
+      "harder_variation": null,
+      "cues": [
+        "Step back into a lunge with the dumbbells at your sides",
+        "Stand up, then curl both dumbbells once",
+        "Finish all reps on one leg, then switch"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+reverse+lunge+to+curl+form"
+    },
+    {
+      "id": "half-kneeling-single-arm-press",
+      "name": "Half-Kneeling Single-Arm Press",
+      "patterns": ["push"],
+      "roles": ["overhead_press", "shoulders"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 40,
+      "equivalents": ["curl-to-press", "db-thruster", "lateral-raise"],
+      "harder_variation": null,
+      "cues": [
+        "Kneel on one knee and hold the dumbbell at that side's shoulder",
+        "Squeeze the glute of the down leg and keep your ribs down",
+        "Press straight overhead, then switch sides"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=half+kneeling+single+arm+dumbbell+press+form"
+    },
+    {
+      "id": "weighted-dead-bug",
+      "name": "Weighted Dead Bug",
+      "patterns": ["core"],
+      "roles": ["core", "loaded_core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 15, "per_side": true},
+      "load": {"dumbbells": 0, "default_source": "fixed", "default_weight_lb": 10, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 40,
+      "equivalents": ["dead-bug", "russian-twist", "hollow-hold"],
+      "harder_variation": {
+        "name": "Straight-Leg Weighted Dead Bug",
+        "how": "Lower a straight leg instead of a bent one while the dumbbell stays over your chest"
+      },
+      "cues": [
+        "Hold one dumbbell with both hands straight over your chest",
+        "Press your lower back into the floor",
+        "Extend one leg at a time while the dumbbell stays still"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+weighted+dead+bug+form"
+    },
+    {
+      "id": "tate-press",
+      "name": "Tate Press",
+      "patterns": ["accessory"],
+      "roles": ["triceps"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 15, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 25,
+      "equivalents": ["skull-crusher", "overhead-triceps-extension", "tricep-kickback"],
+      "harder_variation": null,
+      "cues": [
+        "Lie on the bench with the dumbbells over your chest, ends touching",
+        "Bend your elbows out to the sides to bring the dumbbells to your chest",
+        "Straighten your elbows to press back up"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+tate+press+form"
+    },
+    {
+      "id": "y-raise",
+      "name": "Y-Raise",
+      "patterns": ["accessory"],
+      "roles": ["shoulders"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 12, "min": 10, "max": 20, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 10, "fixed_only": false},
+      "progression": "light",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["lateral-raise", "rear-delt-fly"],
+      "harder_variation": null,
+      "cues": [
+        "Raise your arms up and out into a Y, thumbs up",
+        "Stop when your arms are in line with your ears",
+        "Keep your ribs down so your lower back does not arch"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+y+raise+form"
+    },
+    {
+      "id": "db-bent-over-row",
+      "name": "DB Bent-Over Row",
+      "patterns": ["pull"],
+      "roles": ["heavy_row"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["chest-supported-row", "gorilla-row", "1-arm-db-row"],
+      "harder_variation": {
+        "name": "Deficit DB Bent-Over Row",
+        "how": "Stand on a 2-inch step or plate and hinge until your torso is close to parallel, so each row travels farther"
+      },
+      "cues": [
+        "Hinge to about 45 degrees or lower with a flat back",
+        "Row both dumbbells toward your hips",
+        "Keep your neck in line with your spine"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+bent+over+row+form"
+    },
+    {
+      "id": "db-floor-press",
+      "name": "DB Floor Press",
+      "patterns": ["push"],
+      "roles": ["heavy_press"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-bench-press", "single-arm-floor-press", "incline-db-bench"],
+      "harder_variation": {"id": "db-bench-press"},
+      "cues": [
+        "Lie on the floor with knees bent and feet flat",
+        "Lower until your upper arms touch the floor",
+        "Press up until your arms are straight"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+floor+press+form"
+    },
+    {
+      "id": "db-swing",
+      "name": "DB Swing",
+      "patterns": ["hinge"],
+      "roles": ["athletic_hinge"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 15, "min": 10, "max": 20, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["single-leg-rdl", "b-stance-rdl", "rdl-to-row"],
+      "harder_variation": {
+        "name": "Single-Arm DB Swing",
+        "how": "Swing the dumbbell with one hand and resist the twist; switch hands halfway"
+      },
+      "cues": [
+        "Hold one dumbbell by the end with both hands",
+        "Hike it back between your legs, then snap your hips forward",
+        "Let the dumbbell float to chest height without lifting it with your arms"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+swing+form"
+    },
+    {
+      "id": "cossack-squat",
+      "name": "Cossack Squat",
+      "patterns": ["squat", "lunge"],
+      "roles": ["lunge", "heavy_legs"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 50,
+      "equivalents": ["lateral-lunge", "goblet-squat", "bulgarian-split-squat"],
+      "harder_variation": {
+        "name": "Front-Rack Cossack Squat",
+        "how": "Rack two dumbbells on your shoulders instead of holding one at your chest"
+      },
+      "cues": [
+        "Take a very wide stance with your toes slightly out",
+        "Sit down over one heel while the other leg stays straight, toes up",
+        "Keep your chest up and the dumbbell at your chest"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+cossack+squat+form"
+    },
+    {
+      "id": "bicycle-crunch",
+      "name": "Bicycle Crunch",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": true,
+      "target": {"unit": "reps", "default": 20, "min": 12, "max": 30, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["russian-twist", "dead-bug", "plank-shoulder-taps"],
+      "harder_variation": null,
+      "cues": [
+        "Rest your hands lightly behind your head with your lower back down",
+        "Bring one elbow toward the opposite knee as the other leg extends",
+        "Count each side as one rep"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=bicycle+crunch+form"
+    },
+    {
+      "id": "db-romanian-deadlift",
+      "name": "DB Romanian Deadlift",
+      "patterns": ["hinge"],
+      "roles": ["deadlift", "athletic_hinge"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "adjustable", "default_weight_lb": 45, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-deadlift-from-floor", "b-stance-rdl", "single-leg-rdl"],
+      "harder_variation": {"id": "b-stance-rdl"},
+      "cues": [
+        "Start standing with the dumbbells in front of your thighs",
+        "Push your hips back with soft knees until your hamstrings stretch",
+        "Keep the dumbbells close to your legs and your back flat"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+romanian+deadlift+form"
+    },
+    {
+      "id": "lateral-lunge",
+      "name": "Lateral Lunge",
+      "patterns": ["lunge"],
+      "roles": ["lunge", "heavy_legs"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 8, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 50,
+      "equivalents": ["cossack-squat", "reverse-lunge", "goblet-squat"],
+      "harder_variation": {"id": "cossack-squat"},
+      "cues": [
+        "Hold one dumbbell at your chest",
+        "Step wide to one side and sit back into that hip",
+        "Push off the bent leg to return to the middle"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+lateral+lunge+form"
+    },
+    {
+      "id": "reverse-lunge",
+      "name": "Reverse Lunge",
+      "patterns": ["lunge"],
+      "roles": ["lunge", "heavy_legs"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 6, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["front-rack-reverse-lunge", "reverse-lunge-to-curl", "bulgarian-split-squat"],
+      "harder_variation": {
+        "name": "Deficit Reverse Lunge",
+        "how": "Stand on a 2-inch step or plate and step back off it so the back knee travels lower"
+      },
+      "cues": [
+        "Hold the dumbbells at your sides",
+        "Step back and lower until the back knee nearly touches the floor",
+        "Drive through the front heel to stand"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+reverse+lunge+form"
+    },
+    {
+      "id": "single-arm-floor-press",
+      "name": "Single-Arm Floor Press",
+      "patterns": ["push"],
+      "roles": ["heavy_press"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "adjustable", "default_weight_lb": 30, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 55,
+      "equivalents": ["db-floor-press", "single-arm-db-bench-press", "db-bench-press"],
+      "harder_variation": {"id": "single-arm-db-bench-press"},
+      "cues": [
+        "Lie on the floor with knees bent and one dumbbell at your chest",
+        "Lower until your upper arm touches the floor",
+        "Press straight up without letting your body roll"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=single+arm+dumbbell+floor+press+form"
+    },
+    {
+      "id": "db-squeeze-press",
+      "name": "DB Squeeze Press",
+      "patterns": ["push"],
+      "roles": ["heavy_press", "chest_accessory"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 12, "min": 8, "max": 15, "per_side": false},
+      "load": {"dumbbells": 2, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 30,
+      "equivalents": ["db-fly", "db-bench-press", "db-floor-press"],
+      "harder_variation": {
+        "name": "Incline DB Squeeze Press",
+        "how": "Set the bench to incline and squeeze the dumbbells together through the whole press"
+      },
+      "cues": [
+        "Press the dumbbells together hard over your chest",
+        "Keep them touching as you lower to your chest",
+        "Press back up while still squeezing"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+squeeze+press+form"
+    },
+    {
+      "id": "concentration-curl",
+      "name": "Concentration Curl",
+      "patterns": ["accessory"],
+      "roles": ["biceps"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 10, "min": 8, "max": 15, "per_side": true},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "flat"},
+      "seconds_per_round": 45,
+      "equivalents": ["db-curl", "hammer-curl", "zottman-curl"],
+      "harder_variation": null,
+      "cues": [
+        "Sit on the bench and brace your elbow against your inner thigh",
+        "Curl the dumbbell toward your shoulder",
+        "Straighten the arm fully, then switch sides after the set"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+concentration+curl+form"
+    },
+    {
+      "id": "weighted-sit-up",
+      "name": "Weighted Sit-Up",
+      "patterns": ["core"],
+      "roles": ["core", "loaded_core"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 15, "min": 10, "max": 20, "per_side": false},
+      "load": {"dumbbells": 1, "default_source": "fixed", "default_weight_lb": 25, "fixed_only": false},
+      "progression": "load",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 35,
+      "equivalents": ["russian-twist", "bicycle-crunch", "weighted-dead-bug"],
+      "harder_variation": {
+        "name": "Weighted Sit-Up, Arms Extended",
+        "how": "Hold the dumbbell at arm's length over your chest for the whole sit-up instead of at your chest"
+      },
+      "cues": [
+        "Hold the dumbbell at your chest with knees bent and feet flat",
+        "Sit all the way up without pulling on your neck",
+        "Lower back down until your shoulder blades touch the floor"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=dumbbell+weighted+sit+up+form"
+    },
+    {
+      "id": "bear-hold",
+      "name": "Bear Hold",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": false,
+      "target": {"unit": "seconds", "default": 30, "min": 20, "max": 60, "per_side": false},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "timed",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["plank", "hollow-hold", "plank-shoulder-taps"],
+      "harder_variation": null,
+      "cues": [
+        "Start on hands and knees with hands under shoulders",
+        "Lift your knees an inch off the floor",
+        "Keep your back flat and breathe"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=bear+hold+exercise+form"
+    },
+    {
+      "id": "plank-shoulder-taps",
+      "name": "Plank Shoulder Taps",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 10, "min": 6, "max": 20, "per_side": true},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 25,
+      "equivalents": ["plank", "bear-hold", "bird-dog"],
+      "harder_variation": null,
+      "cues": [
+        "Hold a high plank with your feet wider than your hips",
+        "Tap one hand to the opposite shoulder",
+        "Keep your hips still as you alternate"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=plank+shoulder+taps+form"
+    },
+    {
+      "id": "bird-dog",
+      "name": "Bird Dog",
+      "patterns": ["core"],
+      "roles": ["core"],
+      "in_draft_rotation": false,
+      "target": {"unit": "reps", "default": 6, "min": 6, "max": 12, "per_side": true},
+      "load": {"dumbbells": 0, "default_source": "bodyweight", "default_weight_lb": null, "fixed_only": false},
+      "progression": "bodyweight",
+      "equipment": {"bench": "none"},
+      "seconds_per_round": 30,
+      "equivalents": ["dead-bug", "plank-shoulder-taps", "bear-hold"],
+      "harder_variation": null,
+      "cues": [
+        "Start on hands and knees with a flat back",
+        "Reach one arm forward and the opposite leg back",
+        "Return and switch sides without rocking your hips"
+      ],
+      "video_url": "https://www.youtube.com/results?search_query=bird+dog+exercise+form"
+    }
+  ],
+  "slot_templates": [
+    {
+      "id": "push",
+      "day_type": "push",
+      "source": ["w1d1", "w2d1"],
+      "finisher": true,
+      "blocks": [
+        {
+          "block": "A",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["heavy_press"]},
+            {"roles": ["heavy_row"]},
+            {"roles": ["heavy_legs"]}
+          ]
+        },
+        {
+          "block": "B",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["athletic_hinge"]},
+            {"roles": ["push_up"]},
+            {"roles": ["biceps"]}
+          ]
+        },
+        {
+          "block": "C",
+          "rounds": 3,
+          "slots": [
+            {"roles": ["triceps"]},
+            {"roles": ["shoulders"]},
+            {"roles": ["core"]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hinge-a",
+      "day_type": "hinge",
+      "source": "w1d2",
+      "finisher": false,
+      "blocks": [
+        {
+          "block": "A",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["deadlift"]},
+            {"roles": ["push_up"]},
+            {"roles": ["heavy_row"]}
+          ]
+        },
+        {
+          "block": "B",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["overhead_press"]},
+            {"roles": ["lunge"]},
+            {"roles": ["core"]}
+          ]
+        },
+        {
+          "block": "C",
+          "rounds": 3,
+          "slots": [
+            {"roles": ["biceps"]},
+            {"roles": ["triceps"]},
+            {"roles": ["core"]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hinge-b",
+      "day_type": "hinge",
+      "source": "w2d2",
+      "finisher": false,
+      "blocks": [
+        {
+          "block": "A",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["deadlift"]},
+            {"roles": ["heavy_row"]},
+            {"roles": ["loaded_core"]}
+          ]
+        },
+        {
+          "block": "B",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["lunge"]},
+            {"roles": ["overhead_press", "push_up"]},
+            {"roles": ["core"]}
+          ]
+        },
+        {
+          "block": "C",
+          "rounds": 3,
+          "slots": [
+            {"roles": ["triceps"]},
+            {"roles": ["shoulders"]},
+            {"roles": ["core"]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull-a",
+      "day_type": "pull",
+      "source": "w1d3",
+      "finisher": true,
+      "blocks": [
+        {
+          "block": "A",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["heavy_row"]},
+            {"roles": ["heavy_press"]},
+            {"roles": ["heavy_row"]}
+          ]
+        },
+        {
+          "block": "B",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["athletic_hinge"]},
+            {"roles": ["lunge"]},
+            {"roles": ["biceps"]}
+          ]
+        },
+        {
+          "block": "C",
+          "rounds": 3,
+          "slots": [
+            {"roles": ["shoulders"]},
+            {"roles": ["chest_accessory"]},
+            {"roles": ["core"]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pull-b",
+      "day_type": "pull",
+      "source": "w2d3",
+      "finisher": true,
+      "blocks": [
+        {
+          "block": "A",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["heavy_row"]},
+            {"roles": ["heavy_legs"]},
+            {"roles": ["heavy_press"]}
+          ]
+        },
+        {
+          "block": "B",
+          "rounds": 4,
+          "slots": [
+            {"roles": ["athletic_hinge"]},
+            {"roles": ["lunge"]},
+            {"roles": ["core"]}
+          ]
+        },
+        {
+          "block": "C",
+          "rounds": 3,
+          "slots": [
+            {"roles": ["biceps"]},
+            {"roles": ["triceps"]},
+            {"roles": ["shoulders"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "finishers": [
+    {
+      "id": "A",
+      "name": "DB complex",
+      "rounds": 4,
+      "rest_sec": 75,
+      "movements": ["6 Bent-Over Rows", "6 Hang Cleans", "6 Front Squats", "6 Push Press"],
+      "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2},
+      "est_seconds": 480,
+      "day_types": ["push", "pull"],
+      "excluded_when_session_has": [],
+      "no_equipment_alternate": false,
+      "requires_adjustable": false,
+      "note": "Do not set the dumbbells down within a round. Rest 60 to 90 sec between rounds."
+    },
+    {
+      "id": "B",
+      "name": "Bodyweight intervals",
+      "rounds": 5,
+      "rest_sec": 20,
+      "work_sec": 40,
+      "movements": ["Mountain Climbers", "Squat Jumps", "Push-Up to Shoulder Tap", "Fast Feet", "Plank Up-Downs"],
+      "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0},
+      "est_seconds": 300,
+      "day_types": ["push", "pull"],
+      "excluded_when_session_has": [],
+      "no_equipment_alternate": true,
+      "requires_adjustable": false,
+      "note": "One movement per round in the order listed, 40 sec work and 20 sec rest. Low-impact option: fast bodyweight squats for squat jumps, march in place for fast feet."
+    },
+    {
+      "id": "C",
+      "name": "Swing and carry ladder",
+      "rounds": 3,
+      "rest_sec": 60,
+      "movements": [
+        "15 Swings (one DB, both hands)",
+        "40 sec Farmer Hold or Carry (both DBs)",
+        "20 Mountain Climbers"
+      ],
+      "load": {
+        "source": "adjustable",
+        "uses_session_adjustable": true,
+        "weight_lb_per_dumbbell": null,
+        "dumbbells": 2
+      },
+      "est_seconds": 400,
+      "day_types": ["push", "pull"],
+      "excluded_when_session_has": [],
+      "no_equipment_alternate": false,
+      "requires_adjustable": true
+    },
+    {
+      "id": "D",
+      "name": "Wall-sit burner",
+      "rounds": 3,
+      "rest_sec": 60,
+      "movements": ["12 Goblet Squats", "45 sec Wall Sit holding the DB at the chest"],
+      "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1},
+      "est_seconds": 360,
+      "day_types": ["push", "pull"],
+      "excluded_when_session_has": ["lunge"],
+      "no_equipment_alternate": false,
+      "requires_adjustable": false
+    },
+    {
+      "id": "E",
+      "name": "Man-makers",
+      "rounds": 4,
+      "rest_sec": 60,
+      "movements": [
+        "5 man-makers: push-up on the DBs, row left, row right, step or jump feet in, clean to shoulders, thruster"
+      ],
+      "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2},
+      "est_seconds": 380,
+      "day_types": ["push", "pull"],
+      "excluded_when_session_has": [],
+      "no_equipment_alternate": false,
+      "requires_adjustable": false
+    }
+  ],
+  "warm_up": {
+    "rounds": 2,
+    "movements": ["15 bodyweight squats", "10 push-ups", "10 hip hinges", "8 bird dogs per side", "30 sec plank"]
+  }
+}

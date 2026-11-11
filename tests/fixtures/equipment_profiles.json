@@ -1,0 +1,23 @@
+{
+  "full": {
+    "adjustable": {"present": true, "min_lb": 5, "max_lb": 50, "step_lb": 5},
+    "fixed_pairs_lb": [10, 15, 20, 25],
+    "bench": {"present": true, "incline": true},
+    "pull_up_bar": false,
+    "bands": false
+  },
+  "no_bench": {
+    "adjustable": {"present": true, "min_lb": 5, "max_lb": 50, "step_lb": 5},
+    "fixed_pairs_lb": [10, 15, 20, 25],
+    "bench": {"present": false, "incline": false},
+    "pull_up_bar": false,
+    "bands": false
+  },
+  "fixed_only": {
+    "adjustable": {"present": false, "min_lb": null, "max_lb": null, "step_lb": null},
+    "fixed_pairs_lb": [10, 15, 20, 25],
+    "bench": {"present": true, "incline": true},
+    "pull_up_bar": false,
+    "bands": false
+  }
+}

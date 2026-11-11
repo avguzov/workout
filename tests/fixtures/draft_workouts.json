@@ -1,0 +1,440 @@
+[
+  {
+    "id": "w1d1",
+    "day_type": "push",
+    "template_id": "push",
+    "adjustable_setting_lb": 45,
+    "finisher": "D",
+    "expected_volume_lb": 15280,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-bench-press",
+            "target": {"unit": "reps", "value": 8, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "1-arm-db-row",
+            "target": {"unit": "reps", "value": 10, "per_side": true},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          },
+          {
+            "id": "goblet-squat",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "rdl-to-row",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "t-push-up",
+            "target": {"unit": "reps", "value": 8, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          },
+          {
+            "id": "curl-to-press",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "skull-crusher",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 15, "dumbbells": 2}
+          },
+          {
+            "id": "lateral-raise",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 2}
+          },
+          {
+            "id": "plank",
+            "target": {"unit": "seconds", "value": 60, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w1d2",
+    "day_type": "hinge",
+    "template_id": "hinge-a",
+    "adjustable_setting_lb": 50,
+    "finisher": null,
+    "expected_volume_lb": 12100,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-deadlift-from-floor",
+            "target": {"unit": "reps", "value": 8, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 50, "dumbbells": 2}
+          },
+          {
+            "id": "decline-push-up",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          },
+          {
+            "id": "renegade-row",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-thruster",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          },
+          {
+            "id": "front-rack-reverse-lunge",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          },
+          {
+            "id": "dead-bug",
+            "target": {"unit": "reps", "value": 10, "per_side": true},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "db-curl",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          },
+          {
+            "id": "overhead-triceps-extension",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1}
+          },
+          {
+            "id": "side-plank",
+            "target": {"unit": "seconds", "value": 30, "per_side": true},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w1d3",
+    "day_type": "pull",
+    "template_id": "pull-a",
+    "adjustable_setting_lb": 45,
+    "finisher": "C",
+    "expected_volume_lb": 17820,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "chest-supported-row",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "incline-db-bench",
+            "target": {"unit": "reps", "value": 8, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "db-pullover",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "single-leg-rdl",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          },
+          {
+            "id": "front-rack-step-up",
+            "target": {"unit": "reps", "value": 6, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          },
+          {
+            "id": "hammer-curl",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "rear-delt-fly",
+            "target": {"unit": "reps", "value": 15, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 2}
+          },
+          {
+            "id": "db-fly",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 15, "dumbbells": 2}
+          },
+          {
+            "id": "hollow-hold",
+            "target": {"unit": "seconds", "value": 30, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w2d1",
+    "day_type": "push",
+    "template_id": "push",
+    "adjustable_setting_lb": 45,
+    "finisher": "A",
+    "expected_volume_lb": 18400,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "single-arm-db-bench-press",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          },
+          {
+            "id": "gorilla-row",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          },
+          {
+            "id": "bulgarian-split-squat",
+            "target": {"unit": "reps", "value": 6, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "b-stance-rdl",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "spiderman-push-up",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          },
+          {
+            "id": "zottman-curl",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "tricep-kickback",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 15, "dumbbells": 2}
+          },
+          {
+            "id": "rear-delt-fly",
+            "target": {"unit": "reps", "value": 15, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 2}
+          },
+          {
+            "id": "russian-twist",
+            "target": {"unit": "reps", "value": 20, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 15, "dumbbells": 1}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w2d2",
+    "day_type": "hinge",
+    "template_id": "hinge-b",
+    "adjustable_setting_lb": 50,
+    "finisher": null,
+    "expected_volume_lb": 10520,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-sumo-deadlift",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 50, "dumbbells": 2}
+          },
+          {
+            "id": "renegade-row-with-push-up",
+            "target": {"unit": "reps", "value": 6, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 2}
+          },
+          {
+            "id": "suitcase-carry",
+            "target": {"unit": "seconds", "value": 30, "per_side": true},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 50, "dumbbells": 1}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "reverse-lunge-to-curl",
+            "target": {"unit": "reps", "value": 6, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          },
+          {
+            "id": "half-kneeling-single-arm-press",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1}
+          },
+          {
+            "id": "weighted-dead-bug",
+            "target": {"unit": "reps", "value": 10, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 0}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "tate-press",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 15, "dumbbells": 2}
+          },
+          {
+            "id": "y-raise",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 2}
+          },
+          {
+            "id": "hollow-hold",
+            "target": {"unit": "seconds", "value": 30, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "w2d3",
+    "day_type": "pull",
+    "template_id": "pull-b",
+    "adjustable_setting_lb": 45,
+    "finisher": "E",
+    "expected_volume_lb": 16660,
+    "blocks": [
+      {
+        "block": "A",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-bent-over-row",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          },
+          {
+            "id": "goblet-squat",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          },
+          {
+            "id": "db-floor-press",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 2}
+          }
+        ]
+      },
+      {
+        "block": "B",
+        "rounds": 4,
+        "movements": [
+          {
+            "id": "db-swing",
+            "target": {"unit": "reps", "value": 15, "per_side": false},
+            "load": {"source": "adjustable", "weight_lb_per_dumbbell": 45, "dumbbells": 1}
+          },
+          {
+            "id": "cossack-squat",
+            "target": {"unit": "reps", "value": 8, "per_side": true},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1}
+          },
+          {
+            "id": "bicycle-crunch",
+            "target": {"unit": "reps", "value": 20, "per_side": false},
+            "load": {"source": "bodyweight", "weight_lb_per_dumbbell": null, "dumbbells": 0}
+          }
+        ]
+      },
+      {
+        "block": "C",
+        "rounds": 3,
+        "movements": [
+          {
+            "id": "hammer-curl",
+            "target": {"unit": "reps", "value": 10, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 20, "dumbbells": 2}
+          },
+          {
+            "id": "overhead-triceps-extension",
+            "target": {"unit": "reps", "value": 12, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 25, "dumbbells": 1}
+          },
+          {
+            "id": "rear-delt-fly",
+            "target": {"unit": "reps", "value": 15, "per_side": false},
+            "load": {"source": "fixed", "weight_lb_per_dumbbell": 10, "dumbbells": 2}
+          }
+        ]
+      }
+    ]
+  }
+]
