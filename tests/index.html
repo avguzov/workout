@@ -58,7 +58,8 @@
   }
   try {
     const harness = await import('./harness.js');
-    const files = ['./volume.test.js', './duration.test.js', './recommend.test.js', './validate.test.js', './generator.test.js'];
+    const files = ['./volume.test.js', './duration.test.js', './recommend.test.js', './validate.test.js', './generator.test.js',
+      './app_storage.test.js', './app_format.test.js', './app_flow.test.js'];
     for (const f of files) {
       try {
         await import(f);
