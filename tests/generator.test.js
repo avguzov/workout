@@ -62,9 +62,18 @@ test('hard case: no_bench Single-Arm Floor Press at 30 lb runs in a valid block 
     }));
   });
   assert(found >= 1, 'Single-Arm Floor Press appeared at its first-time 30 lb');
-  // and the press pool under no_bench is only the two floor presses
+  // and the press pool under no_bench is the three floor presses
   const pool = library.movements.filter((m) => isEligible(m, ['heavy_press'], profiles.no_bench)).map((m) => m.id).sort();
-  deepEqual(pool, ['db-floor-press', 'single-arm-floor-press']);
+  deepEqual(pool, ['close-grip-db-floor-press', 'db-floor-press', 'single-arm-floor-press']);
+});
+
+test('no_bench pools: heavy press, triceps, and chest accessory each have at least 3 eligible movements', () => {
+  const sizes = {};
+  ['heavy_press', 'triceps', 'chest_accessory', 'overhead_press'].forEach((role) => {
+    sizes[role] = library.movements.filter((m) => isEligible(m, [role], profiles.no_bench)).length;
+  });
+  ['heavy_press', 'triceps', 'chest_accessory'].forEach((role) => assert(sizes[role] >= 3, role + ' pool under no_bench is ' + sizes[role]));
+  assert(sizes.overhead_press >= 4, 'overhead_press pool under no_bench is ' + sizes.overhead_press);
 });
 
 // ---------------------------------------------------------------- 6. determinism and reroll
@@ -213,7 +222,8 @@ test('autoPickSwaps false: no swaps while the in-rotation pool can fill the slot
 
 test('autoPickSwaps false: swaps fill a slot whose in-rotation pool is empty', () => {
   const lib = clone(library);
-  lib.movements.find((m) => m.id === 'db-floor-press').in_draft_rotation = false;
+  // empty the no_bench in-rotation press pool; Single-Arm Floor Press is already a swap
+  ['db-floor-press', 'close-grip-db-floor-press'].forEach((id) => { lib.movements.find((m) => m.id === id).in_draft_rotation = false; });
   const eq = profiles.no_bench;
   const { sessions, stats } = runChain({ lib, equipment: eq, lengthMin: 60, count: 9, seedPrefix: 'emptypool', autoPickSwaps: false });
   equal(stats.violations, 0, 'violations ' + stats.messages.join(' | '));
@@ -225,8 +235,18 @@ test('autoPickSwaps false: swaps fill a slot whose in-rotation pool is empty', (
   })));
 });
 
-test('fixed_pair: full / 50 min session 20 (pull-a Block B) runs the 30 lb curl on the 25 lb pair, target +2, not off_target', () => {
-  const s = chains['full|50'][20];
+// The fixed_pair case was found in the 58-movement library. The five no-bench movements added
+// 2026-11-11 give the solver enough options that no matrix chain needs a fixed_pair, so this case
+// replays the same chain on that library.
+const ADDED_2026_11 = ['standing-db-shoulder-press', 'standard-push-up', 'close-grip-db-floor-press', 'floor-skull-crusher', 'db-floor-fly'];
+const lib58 = clone(library);
+lib58.movements = lib58.movements.filter((m) => ADDED_2026_11.indexOf(m.id) < 0);
+
+test('fixed_pair: full / 50 min session 20 (pull-a Block B, 58-movement library) runs the 30 lb curl on the 25 lb pair, target +2, not off_target', () => {
+  equal(lib58.movements.length, 58, '58-movement library');
+  const { sessions, stats } = runChain({ lib: lib58, equipment: profiles.full, lengthMin: 50, count: 21, seedPrefix: 'matrix|full|50' });
+  equal(stats.violations, 0, 'violations ' + stats.messages.join(' | '));
+  const s = sessions[20];
   equal(s.template_id, 'pull-a');
   const b = s.blocks[1];
   const it = b.items.find((x) => x.adjusted && x.adjusted.reason === 'fixed_pair');

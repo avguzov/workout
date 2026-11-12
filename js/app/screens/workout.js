@@ -6,6 +6,7 @@ import * as F from '../format.js';
 import * as W from '../flow.js';
 import { nextWeight, previousWeight } from '../../engine/index.js';
 import { finisherCard } from './today.js';
+import { demoSheet } from './demo.js';
 
 let timer = null;
 
@@ -71,9 +72,10 @@ function circuitList(ctx, block, activeIndex, roundDone) {
   return h('ol', { class: 'circuit' }, block.items.map((it, ii) => {
     const mv = ctx.movement(it.movement_id);
     const state = ii === activeIndex ? 'active' : (ii < activeIndex || roundDone ? 'done' : 'next');
-    return h('li', { class: 'circuit-item ' + state, data: { movementId: it.movement_id, item: ii } },
+    return h('li', { class: 'circuit-item ' + state + ' has-demo', data: { movementId: it.movement_id, item: ii } },
       h('div', { class: 'circuit-name' }, h('strong', null, mv ? mv.name : it.movement_id),
         h('span', { class: 'meta' }, F.formatPlan(it.target, it.load))),
+      button('Form', 'demo', { movementId: it.movement_id }, { class: 'btn small form-btn', 'aria-label': 'Form for ' + (mv ? mv.name : it.movement_id) }),
       loggedChips(block, it));
   }));
 }
@@ -114,6 +116,7 @@ function renderRound(ctx, s, p) {
   },
   h('h2', null, mv ? mv.name : item.movement_id),
   h('p', { class: 'meta target-line' }, 'Target ' + F.formatPlan(item.target, item.load) + (edited ? ', edited' : '')),
+  button('Form', 'demo', { movementId: item.movement_id }, { class: 'btn small form-btn', 'aria-label': 'Form for ' + (mv ? mv.name : item.movement_id) }),
   h('div', { class: 'stepper', role: 'group', 'aria-label': unit === 'seconds' ? 'Seconds' : 'Reps' },
     button('-', 'value-down', null, { class: 'btn step', 'aria-label': 'Less', disabled: entry.value <= 0 }),
     h('output', { class: 'step-value', data: { entryValue: entry.value } },
@@ -201,6 +204,10 @@ export function render(ctx) {
   else if (p.phase === 'effort') view = renderEffort(ctx, s, p);
   else view = renderFinisher(ctx, s);
   if (ctx.ui.confirm) view.bar = confirmBar(ctx);
+  if (p.phase !== 'round' && p.phase !== 'rest') ctx.ui.demo = null;
+  const sheet = ctx.ui.demo ? demoSheet(ctx.library, ctx.ui.demo) : null;
+  if (!sheet) ctx.ui.demo = null;
+  else view.main.appendChild(sheet);
   return view;
 }
 
@@ -237,6 +244,7 @@ function update(ctx, fn) {
 
 function complete(ctx, session) {
   ctx.ui.confirm = null;
+  ctx.ui.demo = null;
   ctx.commit((doc) => {
     doc.sessions.push(session);
     doc.current = null;
@@ -313,6 +321,18 @@ export const actions = {
   },
   'cancel-confirm'(ctx) {
     ctx.ui.confirm = null;
+    ctx.render();
+  },
+  demo(ctx, data) {
+    const s = ctx.doc.current;
+    const p = s && s.progress;
+    if (!p || (p.phase !== 'round' && p.phase !== 'rest') || p.block == null) return;
+    if (!s.blocks[p.block].items.some((it) => it.movement_id === data.movementId)) return;
+    ctx.ui.demo = data.movementId;
+    ctx.render();
+  },
+  'demo-close'(ctx) {
+    ctx.ui.demo = null;
     ctx.render();
   },
   'confirm-end'(ctx) {

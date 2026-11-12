@@ -9,6 +9,7 @@ import * as W from '../js/app/flow.js';
 import {
   validateSession, reroll, trimToLength, sessionVolume, lastPerformance, recommend, nextDayType,
 } from '../js/engine/index.js';
+import { swapCandidates } from '../js/engine/index.js';
 
 const T0 = '2026-11-11T07:00:00.000Z';
 const at = (sec) => new Date(Date.parse(T0) + sec * 1000).toISOString();
@@ -94,6 +95,41 @@ test('flow: rerollSession on each scope returns a validated session', () => {
     doc.current = r.session;
   });
   equal(doc.current.rerolls.count, 3);
+});
+
+test('flow: swapMovement swaps one slot to a candidate, validated and recorded; swapOptions lists the candidates with their items; non-candidates and started sessions throw', () => {
+  const doc = freshDoc();
+  doc.current = W.createSession({ library, doc, seed: 31, now: T0 }).session;
+  let done = 0;
+  doc.current.blocks.forEach((b, bi) => b.items.forEach((it, si) => {
+    const params = { library, equipment: doc.equipment, sessions: doc.sessions, session: doc.current, blockIndex: bi, slotIndex: si };
+    const cands = swapCandidates(params);
+    const opts = W.swapOptions({ library, doc, block: b.block, slot: si });
+    deepEqual(opts.map((o) => o.movementId), cands, b.block + si + ' options follow swapCandidates');
+    if (!cands.length) return;
+    const before = JSON.stringify(doc);
+    const r = W.swapMovement({ library, doc, block: b.block, slot: String(si), movementId: cands[0], now: T0 });
+    equal(JSON.stringify(doc), before, 'doc untouched');
+    deepEqual(r.violations, [], b.block + si);
+    equal(r.session.blocks[bi].items[si].movement_id, cands[0]);
+    deepEqual(r.session.blocks[bi].items[si].target, opts[0].item.target, 'option item target is what the swap runs');
+    deepEqual(r.session.blocks[bi].items[si].load, opts[0].item.load, 'option item load is what the swap runs');
+    const rest = (s) => s.blocks.map((x, xi) => x.items.map((y, yi) => (xi === bi && yi === si ? '*' : y.movement_id)).join(',')).join('|');
+    equal(rest(r.session), rest(doc.current), 'other slots unchanged');
+    const rec = r.session.rerolls.history[r.session.rerolls.history.length - 1];
+    deepEqual(rec.scope, { type: 'swap', block: b.block, slot: si });
+    equal(r.session.rerolls.count, doc.current.rerolls.count + 1);
+    let threw = false;
+    try { W.swapMovement({ library, doc, block: b.block, slot: si, movementId: it.movement_id, now: T0 }); } catch (e) { threw = true; }
+    assert(threw, 'swapping to the same movement throws');
+    done += 1;
+  }));
+  assert(done > 0, 'no slot had a candidate');
+  const started = clone(doc);
+  started.current = W.startWorkout(started.current, T0);
+  let threw = false;
+  try { W.swapOptions({ library, doc: started, block: 'A', slot: 0 }); } catch (e) { threw = true; }
+  assert(threw, 'a started session cannot be swapped');
 });
 
 test('flow: a full run logs every round of every active block, asks effort, and completes', () => {

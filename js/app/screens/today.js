@@ -3,8 +3,10 @@
 
 import { h, button } from '../dom.js';
 import * as F from '../format.js';
-import { isStarted, changeLength, rerollSession, startWorkout } from '../flow.js';
+import { isStarted, changeLength, rerollSession, startWorkout, swapMovement } from '../flow.js';
 import { ALLOWED_LENGTHS } from '../../engine/index.js';
+import { swapSheet } from './swap.js';
+import { demoSheet } from './demo.js';
 
 export function finisherWeight(library, finisher) {
   if (!finisher) return null;
@@ -49,8 +51,26 @@ function itemRow(ctx, session, block, item, started) {
       last ? h('p', { class: 'last', data: { last: '' } }, 'Last time ' + F.formatLast(last, item.target)) : null,
       rec ? h('p', { class: 'basis', data: { basis: rec.basis } }, F.basisLine(rec, mv)) : null,
       flags.length ? h('ul', { class: 'flags' }, flags.map((t) => h('li', null, t))) : null),
-    started ? null : button('Shuffle', 'reroll-slot', { block: block.block, slot: item.slot },
-      { class: 'btn small ghost', 'aria-label': 'Shuffle ' + mv.name }));
+    started ? null : h('div', { class: 'item-actions' },
+      button('Shuffle', 'reroll-slot', { block: block.block, slot: item.slot },
+        { class: 'btn small ghost', 'aria-label': 'Shuffle ' + mv.name }),
+      button('Swap', 'swap-open', { block: block.block, slot: item.slot },
+        { class: 'btn small ghost', 'aria-label': 'Swap ' + mv.name })));
+}
+
+// The swap sheet, or a candidate's Form sheet over it, while ctx.ui.swap is set.
+function openSheet(ctx, started) {
+  const ui = ctx.ui;
+  if (started) ui.swap = null;
+  if (!ui.swap) return null;
+  if (ui.swap.demo) {
+    const demo = demoSheet(ctx.library, ui.swap.demo);
+    if (demo) return demo;
+    ui.swap = Object.assign({}, ui.swap, { demo: null });
+  }
+  const sheet = swapSheet(ctx, ui.swap);
+  if (!sheet) ui.swap = null;
+  return sheet;
 }
 
 function blockCard(ctx, session, block, started) {
@@ -109,6 +129,8 @@ export function render(ctx) {
     s.finisher ? finisherCard(ctx.library, s.finisher) : null,
     started ? null : h('div', { class: 'row-end' },
       button('Shuffle whole session', 'reroll-session', null, { class: 'btn ghost' })));
+  const sheet = openSheet(ctx, started);
+  if (sheet) main.appendChild(sheet);
   const bar = h('div', { class: 'bar-row' }, started
     ? button('Resume', 'resume', null, { class: 'btn primary' })
     : button('Start', 'start', null, { class: 'btn primary' }));
@@ -158,7 +180,50 @@ export const actions = {
       library: ctx.library, doc: ctx.doc, now: ctx.now(), scope: { type: 'session' },
     }), 'Could not shuffle the session, so it is unchanged.');
   },
+  'swap-open'(ctx, data) {
+    if (isStarted(ctx.doc.current)) return;
+    ctx.ui.swap = { block: data.block, slot: Number(data.slot) };
+    ctx.render();
+  },
+  'swap-close'(ctx) {
+    ctx.ui.swap = null;
+    ctx.render();
+  },
+  'swap-demo'(ctx, data) {
+    if (!ctx.ui.swap) return;
+    ctx.ui.swap = Object.assign({}, ctx.ui.swap, { demo: data.movementId });
+    ctx.render();
+  },
+  // Closing a Form sheet opened from the swap sheet returns to the swap sheet.
+  'demo-close'(ctx) {
+    if (ctx.ui.swap) ctx.ui.swap = Object.assign({}, ctx.ui.swap, { demo: null });
+    ctx.render();
+  },
+  'swap-pick'(ctx, data) {
+    const st = ctx.ui.swap;
+    if (!st) return;
+    ctx.ui.swap = null;
+    const failText = 'Could not swap that movement, so the session is unchanged.';
+    let result;
+    try {
+      result = swapMovement({
+        library: ctx.library, doc: ctx.doc, block: st.block, slot: st.slot, movementId: data.movementId, now: ctx.now(),
+      });
+    } catch (e) {
+      ctx.ui.flash = { kind: 'error', text: failText + ' ' + String((e && e.message) || e) };
+      ctx.render();
+      return;
+    }
+    if (result.violations.length) {
+      applyPlan(ctx, result, failText);
+      return;
+    }
+    const mv = ctx.movement(data.movementId);
+    ctx.ui.flash = { kind: 'info', text: 'Swapped to ' + (mv ? mv.name : data.movementId) };
+    ctx.commit((doc) => { doc.current = result.session; });
+  },
   start(ctx) {
+    ctx.ui.swap = null;
     ctx.commit((doc) => { doc.current = startWorkout(doc.current, ctx.now()); }, { render: false });
     ctx.go('workout');
   },

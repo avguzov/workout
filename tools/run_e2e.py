@@ -11,6 +11,12 @@ to /__results. Two Edge processes share one temporary profile:
            sessions until Today shows last-time numbers, mid-workout reload
   phase 2  a second Edge process on the same profile: every session and the workout in
            progress survived the restart, and Resume lands on the same block and round
+  swap     a third Edge process on its own fresh profile: the Swap sheet on Today
+  settings each name in FRESH_PHASES runs next, every one on its own fresh profile: the tab
+           row, Settings (equipment guard, default length, swap switch), and backup export
+           and import
+  history  History and Progress: empty states, a seeded history built with flow.js, the list,
+           the detail view, the charts against stats.js, and the 375 px layout
 
 Edge is killed and the profile removed on every exit path, including timeouts and Ctrl+C.
 Exit codes: 0 every assertion passed, 1 some assertion failed, 2 timed out, 3 Edge not found.
@@ -33,6 +39,13 @@ from run_tests import Handler as BaseHandler, find_edge, kill_edge, remove_profi
 
 APP_DIR = Path(__file__).resolve().parent.parent
 PHASE_TIMEOUT_SEC = {1: 480, 2: 120}
+PHASE_TIMEOUT_SEC["swap"] = 180  # swap phase, on its own fresh profile
+# Named phases that each get their own new profile, run in order after the swap phase.
+# To add one: give it a timeout, append its name here, and dispatch on PHASE_NAME in
+# tests/e2e.js main().
+PHASE_TIMEOUT_SEC["settings"] = 300  # tabs, Settings, and backup
+PHASE_TIMEOUT_SEC["history"] = 240  # History and Progress
+FRESH_PHASES = ["settings", "history"]
 WINDOW = "390,844"
 
 
@@ -134,6 +147,35 @@ def main():
                                f"{PHASE_TIMEOUT_SEC[phase]} seconds")
                 break
             phases[phase] = server.results
+        if not timeout_msg:
+            # Swap phase: its own fresh profile, so phases 1 and 2 keep theirs.
+            swap_profile = tempfile.mkdtemp(prefix="app-e2e-swap-")
+            try:
+                got, leftover = run_phase(edge, swap_profile, port, "swap", server)
+            finally:
+                if not remove_profile(swap_profile):
+                    leftovers.append(f"swap profile left at {swap_profile}")
+            if leftover:
+                leftovers.append(f"phase swap: {leftover}")
+            if not got or server.results is None:
+                timeout_msg = f"TIMEOUT: phase swap sent no results within {PHASE_TIMEOUT_SEC['swap']} seconds"
+            else:
+                phases["swap"] = server.results
+        for name in FRESH_PHASES:
+            if timeout_msg:
+                break
+            fresh_profile = tempfile.mkdtemp(prefix=f"app-e2e-{name}-")
+            try:
+                got, leftover = run_phase(edge, fresh_profile, port, name, server)
+            finally:
+                if not remove_profile(fresh_profile):
+                    leftovers.append(f"{name} profile left at {fresh_profile}")
+            if leftover:
+                leftovers.append(f"phase {name}: {leftover}")
+            if not got or server.results is None:
+                timeout_msg = f"TIMEOUT: phase {name} sent no results within {PHASE_TIMEOUT_SEC[name]} seconds"
+            else:
+                phases[name] = server.results
     finally:
         server.shutdown()
         server.server_close()
@@ -144,6 +186,11 @@ def main():
     for phase in (1, 2):
         for r in (phases.get(phase) or {}).get("results") or []:
             results.append((phase, r))
+    for r in (phases.get("swap") or {}).get("results") or []:
+        results.append(("swap", r))
+    for name in FRESH_PHASES:
+        for r in (phases.get(name) or {}).get("results") or []:
+            results.append((name, r))
     if 1 in phases and 2 not in phases and not timeout_msg:
         results.append((2, {"name": "phase 2 ran", "ok": False,
                             "message": "skipped because phase 1 produced no expectations"}))
@@ -162,6 +209,11 @@ def main():
     for phase in (1, 2):
         for k, v in ((phases.get(phase) or {}).get("info") or {}).items():
             print(f"info [{phase}] {k}: {v}")
+    for k, v in ((phases.get("swap") or {}).get("info") or {}).items():
+        print(f"info [swap] {k}: {v}")
+    for name in FRESH_PHASES:
+        for k, v in ((phases.get(name) or {}).get("info") or {}).items():
+            print(f"info [{name}] {k}: {v}")
 
     passed = sum(1 for _, r in results if r.get("ok"))
     failed = len(results) - passed

@@ -15,3 +15,4 @@ export {
   activeItems, allItems, REQUIRED_PATTERNS,
 } from './generator.js';
 export { validateSession, slotAlternatives } from './validate.js';
+export { swapCandidates, swapSlot, musclePeers, sameMuscleGroup } from './swap.js';

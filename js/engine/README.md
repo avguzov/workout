@@ -14,6 +14,9 @@ nextDayType(sessions, library) -> "push" | "hinge" | "pull"
 pickTemplate(library, sessions, dayType) -> slot template
 validateSession({ library, equipment, sessions, session }) -> [] | [{ rule, message }]
 slotAlternatives({ library, equipment, session, blockIndex, slotIndex, exclude?, inRotationOnly? }) -> [movement_id]
+swapCandidates({ library, equipment, sessions, session, blockIndex, slotIndex }) -> [movement_id]
+swapSlot({ library, equipment, sessions, session, blockIndex, slotIndex, movementId, now }) -> Session
+musclePeers(library, movementId) -> [movement_id];  sameMuscleGroup(movementA, movementB) -> bool
 recommend({ library, equipment, sessions, movementId | movement }) -> recommendation
 lastPerformance(sessions, movementId) -> null | { date, weight_lb_per_dumbbell, target_value, values_by_round, effort, day_type, session_id }
 sessionVolume(session) -> { volume_lb, bodyweight_reps, timed_sec, blocks: [{ block, volume_lb, ..., items: [...] }] }
@@ -43,7 +46,7 @@ session; `reroll` derives its seed from `session.seed`, the reroll count, and th
                                  last: null|{ date, weight_lb_per_dumbbell, values_by_round, effort, ... },
                                  remapped_from_lb? },
                adjusted: null|{ reason: "block_setting"|"fixed_pair", recommended_weight_lb, rep_shift },
-               forced_repeat, off_target, swap, reroll_excluded: [movement_id],
+               forced_repeat, off_target, swap, reroll_excluded: [movement_id], swapped_from?: movement_id,
                logged: null|{ rounds: [ { value, weight_lb_per_dumbbell } ], effort: "two_plus_left"|"hard_clean"|"barely"|null } } ] } ],
   finisher: null|{ id, name, weight_lb_per_dumbbell: number|null, setting_basis, done: null|bool },
   estimate_sec, trims: [ { step, block, from_rounds, to_rounds, estimate_sec_before, estimate_sec_after } ],
@@ -65,6 +68,28 @@ session; `reroll` derives its seed from `session.seed`, the reroll count, and th
   count them as alternatives.
 - Logging writes `logged` on each item and `completed_at` on the session. A logged session can
   be rerolled, but rerolling re-trims from planned rounds.
+
+## Movement swaps (`swap.js`)
+
+The owner replaces one movement with a movement of the same muscle group (equal library
+`muscle_group`; `musclePeers` lists them, the relation is symmetric). Not the same thing as an
+item's `swap` flag or the `swaps` rule, which are about movements outside the draft rotation.
+
+- `swapCandidates` starts from `slotAlternatives` with that slot's `reroll_excluded` cleared (an
+  explicit pick may bring back a movement a shuffle or an earlier swap took out), keeps the same
+  muscle group, and keeps only movements whose `swapSlot` result has zero `validateSession`
+  violations. Order: least recently done first (never done first), then by name.
+- `swapSlot` rebuilds that slot the way `reroll` rebuilds a slot scope (`placeInSlot` in
+  `generator.js`): recommendation, load, block setting and adjustment, flags, then the finisher is
+  kept if still allowed or re-picked, and trims and the estimate are re-applied. Every other slot
+  keeps its movement. It throws when `movementId` is not in `swapCandidates`. Deterministic; the
+  seed comes from `session.seed`, the reroll count, the slot, and the movement.
+- Record: `rerolls.count` goes up by 1 and `rerolls.history` gets
+  `{ at, scope: { type: "swap", block, slot }, changes: [ { block, slot, from, to } ], finisher: { from, to } }`.
+  The new item gets `swapped_from` (the replaced movement) and `reroll_excluded` = the old item's
+  list plus the replaced movement. `reroll` also excludes an in-scope item's `swapped_from`, so a
+  shuffle right after a swap does not bring the replaced movement straight back (items without
+  `swapped_from` reroll exactly as before).
 
 ## Recommendation basis values
 

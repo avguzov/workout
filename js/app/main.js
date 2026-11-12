@@ -1,5 +1,6 @@
 // App entry: loads the library and the stored document, then routes by hash
-// (#/today, #/workout, #/summary). Every state change is written to IndexedDB right away.
+// (#/today, #/workout, #/summary, #/history, #/progress, #/settings). Every state change is
+// written to IndexedDB right away. The tab row (NAV) shows on the four NAV screens only.
 
 import { openStorage, requestPersistence, DB_NAME } from './storage.js';
 import { createSession, isStale, isStarted } from './flow.js';
@@ -7,8 +8,21 @@ import { h, append } from './dom.js';
 import * as today from './screens/today.js';
 import * as workout from './screens/workout.js';
 import * as summary from './screens/summary.js';
+import * as historyScreen from './screens/history.js';
+import * as progressScreen from './screens/progress.js';
+import * as settingsScreen from './screens/settings.js';
 
-const ROUTES = { today, workout, summary };
+const ROUTES = { today, workout, summary, history: historyScreen, progress: progressScreen, settings: settingsScreen };
+
+// Tab row above the content on these four screens (hidden on workout and summary).
+const NAV = [['today', 'Today'], ['history', 'History'], ['progress', 'Progress'], ['settings', 'Settings']];
+
+function navBar(name) {
+  return h('nav', { class: 'tabs', id: 'nav', 'aria-label': 'Main' },
+    h('div', { class: 'tabs-row' }, NAV.map(([id, label]) => h('a', {
+      class: 'tab', href: '#/' + id, data: { nav: id }, 'aria-current': id === name ? 'page' : null,
+    }, label))));
+}
 
 function newSeed() {
   const a = new Uint32Array(1);
@@ -91,7 +105,8 @@ async function boot() {
   const ctx = {
     library,
     get doc() { return doc; },
-    ui: { flash: null, confirm: null, genError: null },
+    ui: { flash: null, confirm: null, genError: null, demo: null, settingsNote: null, backupImport: null, swap: null, progressMovement: null },
+    route: { name: 'today', id: null },
     now: () => new Date().toISOString(),
     movement: (id) => byId.get(id) || null,
     commit(fn, opts) {
@@ -123,33 +138,48 @@ async function boot() {
     }
   }
 
+  // #/history/<session id> is the History detail; an unknown id falls back to #/history.
+  function routeId(name, part) {
+    if (name !== 'history' || !part) return null;
+    let id = null;
+    try { id = decodeURIComponent(part); } catch (e) { return null; }
+    return doc.sessions.some((s) => s.id === id) ? id : null;
+  }
+
   function resolve() {
-    let name = location.hash.replace(/^#\/?/, '').split(/[/?]/)[0];
+    const parts = location.hash.replace(/^#\/?/, '').split('?')[0].split('/');
+    let name = parts[0];
     if (!ROUTES[name]) name = 'today';
     if (name === 'workout' && !(doc.current && isStarted(doc.current) && doc.current.progress)) name = 'today';
     if (name === 'summary' && !doc.sessions.length) name = 'today';
-    if (location.hash !== '#/' + name) history.replaceState(null, '', '#/' + name);
+    const id = routeId(name, parts[1]);
+    ctx.route = { name, id };
+    const hash = '#/' + name + (id ? '/' + encodeURIComponent(id) : '');
+    if (location.hash !== hash) history.replaceState(null, '', hash);
     if (name === 'today') ensureCurrent();
     return name;
   }
 
-  // Scroll to the top whenever the screen, phase, block, or round changes.
+  // Scroll to the top whenever the screen, phase, block, or round changes (or the History detail).
   let lastView = '';
   function viewKey(name) {
     const p = name === 'workout' && doc.current ? doc.current.progress : null;
-    return name + (p ? '|' + p.phase + '|' + p.block + '|' + p.round : '');
+    return name + (p ? '|' + p.phase + '|' + p.block + '|' + p.round : '') + (ctx.route.id ? '|' + ctx.route.id : '');
   }
 
   function render() {
     const name = resolve();
     if (active && active.unmount) active.unmount();
-    if (name !== 'workout') ctx.ui.confirm = null;
+    if (name !== 'workout') { ctx.ui.confirm = null; ctx.ui.demo = null; }
+    if (name !== 'today') ctx.ui.swap = null;
+    if (name !== 'settings') { ctx.ui.settingsNote = null; ctx.ui.backupImport = null; }
     const screen = ROUTES[name];
     active = screen;
     const view = screen.render(ctx);
     const main = h('main', { class: 'content', id: 'main' }, view.main);
     const bar = h('footer', { class: 'bar', id: 'bar' }, view.bar);
     root.textContent = '';
+    if (NAV.some((n) => n[0] === name)) root.appendChild(navBar(name));
     root.appendChild(main);
     root.appendChild(bar);
     html.dataset.screen = name;

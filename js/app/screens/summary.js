@@ -17,28 +17,28 @@ export function finisherStatus(session) {
   return session.finisher.done ? 'done' : 'skipped';
 }
 
-function stat(label, value, data) {
+export function stat(label, value, data) {
   return h('div', { class: 'stat', data }, h('span', { class: 'stat-label' }, label), h('span', { class: 'stat-value' }, value));
 }
 
-export function render(ctx) {
-  const sessions = ctx.doc.sessions;
-  const s = sessions[sessions.length - 1];
-  const vol = sessionVolume(s);
-  const cmp = compareVolume(s, sessions);
-  const dur = durationSec(s);
-  const fin = finisherStatus(s);
-  const main = h('div', {
-    class: 'screen summary',
-    data: {
-      screen: 'summary', sessionId: s.id, dayType: s.day_type, volumeLb: vol.volume_lb,
-      bodyweightReps: vol.bodyweight_reps, timedSec: vol.timed_sec, durationSec: dur, finisher: fin,
-    },
-  },
-  h('header', { class: 'screen-head' },
-    h('p', { class: 'eyebrow' }, s.ended_early ? 'Ended early' : 'Workout done'),
-    h('h1', null, F.dayLabel(s.day_type) + ' day')),
-  h('section', { class: 'card stats' },
+// Volume, its comparison, duration, and finisher status of `s`. `history` is the completed list
+// to compare against (compareVolume leaves `s` itself out).
+export function sessionFacts(s, history) {
+  return { vol: sessionVolume(s), cmp: compareVolume(s, history), dur: durationSec(s), fin: finisherStatus(s) };
+}
+
+// Data attributes for a screen root that shows one session (Summary and the History detail).
+export function factsData(s, facts) {
+  return {
+    sessionId: s.id, dayType: s.day_type, volumeLb: facts.vol.volume_lb, bodyweightReps: facts.vol.bodyweight_reps,
+    timedSec: facts.vol.timed_sec, durationSec: facts.dur, finisher: facts.fin,
+  };
+}
+
+// Duration, volume and the comparison, per-block volume, bodyweight reps, timed work, finisher.
+export function statsCard(s, facts) {
+  const { vol, cmp, dur, fin } = facts;
+  return h('section', { class: 'card stats' },
     stat('Duration', F.formatDuration(dur)),
     stat('Volume', F.formatNumber(vol.volume_lb) + ' lb', { volume: '' }),
     h('p', { class: 'compare', data: { compared: cmp ? cmp.sessions_compared : 0 } }, F.comparisonText(cmp, s.day_type)),
@@ -46,7 +46,21 @@ export function render(ctx) {
       stat('Block ' + b.block, F.formatNumber(b.volume_lb) + ' lb', { blockVolume: b.volume_lb, block: b.block })),
     stat('Bodyweight reps', F.formatNumber(vol.bodyweight_reps)),
     stat('Timed work', F.formatNumber(vol.timed_sec) + ' sec'),
-    s.finisher ? stat('Finisher', (s.finisher.name || s.finisher.id) + ', ' + fin) : null),
+    s.finisher ? stat('Finisher', (s.finisher.name || s.finisher.id) + ', ' + fin) : null);
+}
+
+export function render(ctx) {
+  const sessions = ctx.doc.sessions;
+  const s = sessions[sessions.length - 1];
+  const facts = sessionFacts(s, sessions);
+  const main = h('div', {
+    class: 'screen summary',
+    data: Object.assign({ screen: 'summary' }, factsData(s, facts)),
+  },
+  h('header', { class: 'screen-head' },
+    h('p', { class: 'eyebrow' }, s.ended_early ? 'Ended early' : 'Workout done'),
+    h('h1', null, F.dayLabel(s.day_type) + ' day')),
+  statsCard(s, facts),
   h('section', { class: 'card' },
     h('label', { class: 'label', for: 'notes' }, 'Notes'),
     h('textarea', { id: 'notes', rows: '4', data: { field: 'notes' }, placeholder: 'How it went, what to change next time' })),

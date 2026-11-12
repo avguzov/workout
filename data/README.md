@@ -9,7 +9,7 @@ All weights are lb per dumbbell. Validate any edit with `python tools/check_libr
 - `default_equipment`: starting equipment profile. `adjustable` {present, min_lb, max_lb, step_lb}, `fixed_pairs_lb` (list), `bench` {present, incline}, `pull_up_bar`, `bands`. The app lets the user edit this, so code must read limits from the profile, never assume them
 - `timing`: seconds used by the duration estimate. `transition_sec` (between movements in a round), `rest_between_rounds_sec` per block, `between_blocks_sec`, `warm_up_sec` (both warm-up rounds)
 - `roles`: slot roles {id, label}. A role names the job a movement can do in a session
-- `movements`: the 58-movement library (fields below)
+- `movements`: the 63-movement library, 53 in rotation (fields below)
 - `slot_templates`: session shapes. Each has `id`, `day_type` (push, hinge, pull), `source` (draft workout ids it came from), `finisher` (whether the day gets one), and `blocks` A, B, C with `rounds` 4, 4, 3 and three `slots` of accepted `roles`. When a day type has two templates, the generator alternates them
 - `finishers`: A to E. `rounds`, `rest_sec`, `movements` (display strings), `load`, `est_seconds`, `day_types`, plus rule fields: `excluded_when_session_has` (patterns that rule the finisher out), `no_equipment_alternate` (fallback only, never a default pick), `requires_adjustable` (needs the adjustable pair; its `load.uses_session_adjustable` means it reuses the session setting)
 - `warm_up`: `rounds` and display `movements`
@@ -19,7 +19,8 @@ All weights are lb per dumbbell. Validate any edit with `python tools/check_libr
 - `id`: kebab-case slug, stable key for logs. `name`: display name
 - `patterns`: 1 or 2 of squat, lunge, hinge, push, pull, carry, accessory, core. Step-ups are lunge; combos list both parts
 - `roles`: role ids this movement can fill
-- `in_draft_rotation`: true for movements in the six drafted workouts, false for swaps
+- `muscle_group`: the swap group, one of chest, back, shoulders, biceps, triceps, quads_glutes, hamstrings_glutes, core. A swap on Today offers only movements with the same value (and that can fill the slot). A combination movement takes the group of its main work: RDL-to-Row hamstrings_glutes, Renegade Row with Push-Up back, Curl-to-Press biceps, DB Thruster shoulders, Reverse Lunge to Curl quads_glutes. `check_library.py` checks the value and that each group has at least 2 movements
+- `in_draft_rotation`: true for the 53 movements in rotation: the 48 in the six drafted workouts plus the 5 added on 2026-11-11 (Standing DB Shoulder Press, Standard Push-Up, Close-Grip DB Floor Press, Floor Skull Crusher, DB Floor Fly), which are in rotation without appearing in the drafts. False for the other 10 (the swap pool behind `auto_pick_swaps`; not related to the owner's Swap button)
 - `target`: `unit` (reps or seconds), `default`, `min`, `max`, `per_side`. Reps given as a total across sides use `per_side: false` with the total
 - `load.dumbbells`: dumbbells moved through each counted rep; this is the number in the volume formula. A dumbbell that stays still during the rep is not counted (the support hand in Renegade Row and Gorilla Row, the overhead hold in Weighted Dead Bug)
 - `load.default_source`: adjustable, fixed, or bodyweight. `load.default_weight_lb`: starting weight, null for bodyweight

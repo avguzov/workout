@@ -184,15 +184,22 @@ test('validator negative: swaps (swap picked with autoPickSwaps off while in-rot
   caught('swaps', s, []);
 });
 
+// The fixed_pair case was found in the 58-movement library; the five no-bench movements added
+// 2026-11-11 leave no fixed_pair in that chain, so this case replays it on that library.
+const ADDED_2026_11 = ['standing-db-shoulder-press', 'standard-push-up', 'close-grip-db-floor-press', 'floor-skull-crusher', 'db-floor-fly'];
+const lib58 = clone(library);
+lib58.movements = lib58.movements.filter((m) => ADDED_2026_11.indexOf(m.id) < 0);
+
 test('validator negative: weight_fidelity on a fixed_pair item (two steps off; shift in the wrong direction)', () => {
   let found = null;
-  runChain({ equipment: full, lengthMin: 50, count: 21, seedPrefix: 'matrix|full|50', onSession: (s, i, hist) => {
+  equal(lib58.movements.length, 58, '58-movement library');
+  runChain({ lib: lib58, equipment: full, lengthMin: 50, count: 21, seedPrefix: 'matrix|full|50', onSession: (s, i, hist) => {
     s.blocks.forEach((b, bi) => b.items.forEach((it, si) => {
       if (!found && it.adjusted && it.adjusted.reason === 'fixed_pair') found = { s, hist, bi, si };
     }));
   } });
-  assert(found, 'the full / 50 min chain produces a fixed_pair item');
-  equal(rulesOf(found.s, found.hist).length, 0, 'unmodified fixed_pair session validates');
+  assert(found, 'the full / 50 min chain on the 58-movement library produces a fixed_pair item');
+  equal(rulesOf(found.s, found.hist, full, lib58).length, 0, 'unmodified fixed_pair session validates');
   const it0 = found.s.blocks[found.bi].items[found.si];
   const avail = availableWeights(movement(it0.movement_id), full);
   const i = avail.indexOf(it0.load.weight_lb_per_dumbbell);
@@ -200,11 +207,11 @@ test('validator negative: weight_fidelity on a fixed_pair item (two steps off; s
   const a = two.blocks[found.bi].items[found.si];
   a.load.weight_lb_per_dumbbell = avail[i - 1];
   a.load.source = weightSource(avail[i - 1], full);
-  caught('weight_fidelity', two, found.hist);
+  caught('weight_fidelity', two, found.hist, full, lib58);
   const wrong = clone(found.s);
   const b = wrong.blocks[found.bi].items[found.si];
   const mv = movement(b.movement_id);
   b.target.value = Math.max(mv.target.min, b.recommendation.target_value - 2);
   b.adjusted.rep_shift = b.target.value - b.recommendation.target_value;
-  caught('weight_fidelity', wrong, found.hist);
+  caught('weight_fidelity', wrong, found.hist, full, lib58);
 });

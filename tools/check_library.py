@@ -37,6 +37,9 @@ UNITS = {"reps", "seconds"}
 SOURCES = {"adjustable", "fixed", "bodyweight"}
 PROGRESSIONS = {"load", "light", "bodyweight", "timed"}
 BENCH = {"none", "flat", "incline"}
+# Swap groups: a swap only offers movements with the same muscle_group (js/engine/swap.js).
+MUSCLE_GROUPS = {"chest", "back", "shoulders", "biceps", "triceps", "quads_glutes",
+                 "hamstrings_glutes", "core"}
 FINISHER_IDS = ["A", "B", "C", "D", "E"]
 DRAFT_IDS = ["w1d1", "w1d2", "w1d3", "w2d1", "w2d2", "w2d3"]
 PROFILE_NAMES = ["full", "no_bench", "fixed_only"]
@@ -45,15 +48,18 @@ VIDEO_PREFIX = "https://www.youtube.com/results?search_query="
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 ROLE_ID = re.compile(r"^[a-z][a-z0-9_]*$")
 BANNED = re.compile(r"slow|pause|tempo|\d+-sec", re.I)
-EXPECTED_MOVEMENTS = 58
-EXPECTED_IN_ROTATION = 48
+EXPECTED_MOVEMENTS = 63
+EXPECTED_IN_ROTATION = 53
+# In rotation by owner approval (2026-11-11) to deepen the no-bench pools; not in the drafts.
+ADDED_IN_ROTATION = {"standing-db-shoulder-press", "standard-push-up", "close-grip-db-floor-press",
+                     "floor-skull-crusher", "db-floor-fly"}
 FINISHER_SEC = (300, 480)
 DURATION_MIN = (35, 55)
 DURATION_LONG = {"w2d1": (45, 55)}
 
 TOP_KEYS = ["schema_version", "units", "default_equipment", "timing", "roles", "movements",
             "slot_templates", "finishers", "warm_up"]
-MOVEMENT_KEYS = ["id", "name", "patterns", "roles", "in_draft_rotation", "target", "load",
+MOVEMENT_KEYS = ["id", "name", "patterns", "roles", "muscle_group", "in_draft_rotation", "target", "load",
                  "progression", "equipment", "seconds_per_round", "equivalents",
                  "harder_variation", "cues", "video_url"]
 FINISHER_KEYS = {"id", "name", "rounds", "rest_sec", "movements", "load", "est_seconds",
@@ -206,6 +212,8 @@ def check_movement(mv, idx, eq, errs):
         errs.append(f"{where}: patterns must be 1 or 2 distinct values from {sorted(PATTERNS)}")
     if not str_list(mv["roles"]) or len(set(mv["roles"])) != len(mv["roles"]):
         errs.append(f"{where}: roles must be a non-empty list of distinct strings")
+    if mv["muscle_group"] not in MUSCLE_GROUPS:
+        errs.append(f"{where}: muscle_group must be one of {sorted(MUSCLE_GROUPS)}")
     if not isinstance(mv["in_draft_rotation"], bool):
         errs.append(f"{where}: in_draft_rotation must be boolean")
     check_target(mv["target"], where, errs, ("default", "min", "max"))
@@ -544,6 +552,12 @@ def check3(lib, drafts):
                 errs.append(f"{m['id']}: harder_variation points to itself")
             elif hv["id"] not in by_id:
                 errs.append(f"{m['id']}: harder_variation {hv['id']} does not resolve")
+    groups = {}
+    for m in lib["movements"]:
+        groups.setdefault(m["muscle_group"], []).append(m["id"])
+    for g in sorted(MUSCLE_GROUPS):
+        if len(groups.get(g, [])) < 2:
+            errs.append(f"muscle_group {g} has {len(groups.get(g, []))} movement(s), needs at least 2")
     template_ids = {t["id"] for t in lib["slot_templates"]}
     finisher_ids = {f["id"] for f in lib["finishers"]}
     n_fix = 0
@@ -558,7 +572,7 @@ def check3(lib, drafts):
                 if e["id"] not in by_id:
                     errs.append(f"{w['id']} {b['block']}: movement {e['id']} does not resolve")
     n_bench = sum(1 for m in lib["movements"] if needs_bench(m))
-    return errs, (f"{len(roles)} roles; {n_equiv} equivalent links; "
+    return errs, (f"{len(roles)} roles; {len(groups)} muscle groups; {n_equiv} equivalent links; "
                   f"{n_bench} bench movements checked for a no-bench equivalent; "
                   f"{n_fix} fixture movement refs")
 
@@ -634,12 +648,18 @@ def check5(lib, drafts):
     if len(off) != EXPECTED_MOVEMENTS - EXPECTED_IN_ROTATION:
         errs.append(f"expected {EXPECTED_MOVEMENTS - EXPECTED_IN_ROTATION} swaps, found {len(off)}")
     used = draft_ids(drafts)
-    if on != used:
-        if on - used:
-            errs.append(f"flagged in rotation but not in drafts: {sorted(on - used)}")
-        if used - on:
-            errs.append(f"used in drafts but not flagged: {sorted(used - on)}")
-    return errs, f"{len(on)} in rotation, {len(off)} swaps; compared with the {len(used)} draft ids"
+    if ADDED_IN_ROTATION - on:
+        errs.append(f"added movements not flagged in rotation: {sorted(ADDED_IN_ROTATION - on)}")
+    if ADDED_IN_ROTATION & used:
+        errs.append(f"added movements also appear in drafts: {sorted(ADDED_IN_ROTATION & used)}")
+    drafted = on - ADDED_IN_ROTATION
+    if drafted != used:
+        if drafted - used:
+            errs.append(f"flagged in rotation but not in drafts: {sorted(drafted - used)}")
+        if used - drafted:
+            errs.append(f"used in drafts but not flagged: {sorted(used - drafted)}")
+    return errs, (f"{len(on)} in rotation, {len(off)} swaps; compared with the {len(used)} draft ids "
+                  f"plus {len(ADDED_IN_ROTATION)} added")
 
 
 def check6(lib, profiles):

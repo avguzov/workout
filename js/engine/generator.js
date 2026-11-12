@@ -558,7 +558,8 @@ export function reroll({ library, equipment, sessions, session, scope, now }) {
     const groups = template.blocks.map((bt, bi) => blockOptionGroups(bt.block, bt.slots.map((slot, si) => {
       const old = session.blocks[bi].items[si];
       if (!inScope(bi, si)) return [fixedChoice(ctx, old)];
-      const excl = useExclusions ? new Set([old.movement_id]) : null;
+      // An item placed by swapSlot also keeps the movement it replaced out (swapped_from).
+      const excl = useExclusions ? new Set([old.movement_id].concat(old.swapped_from ? [old.swapped_from] : [])) : null;
       return slotChoices(ctx, slot.roles, excl, taken);
     })));
     return searchSession(ctx, groups);
@@ -601,4 +602,39 @@ export function reroll({ library, equipment, sessions, session, scope, now }) {
     }]),
   };
   return out;
+}
+
+// Rebuild one slot with a chosen movement and every other slot kept, the way reroll rebuilds a
+// slot scope: the block setting and the item's load re-searched, the finisher re-checked, trims
+// re-applied. Used by swapSlot (swap.js), which adds the record. -> Session, or null when the
+// movement cannot fill the slot in a valid block (not eligible, no load, patterns lost).
+export function placeInSlot({ library, equipment, sessions, session, blockIndex, slotIndex, movementId, seedInt }) {
+  const history = sessions || [];
+  const template = library.slot_templates.find((t) => t.id === session.template_id);
+  if (!template) throw new Error('Unknown template ' + session.template_id);
+  const bt = template.blocks[blockIndex];
+  if (!bt || !bt.slots[slotIndex]) return null;
+  const ctx = buildContext({
+    library, equipment, sessions: history, dayType: session.day_type, seedInt,
+    autoPickSwaps: session.auto_pick_swaps !== false,
+  });
+  const none = new Set();
+  const groups = template.blocks.map((b, bi) => blockOptionGroups(b.block, b.slots.map((slot, si) => {
+    if (bi !== blockIndex || si !== slotIndex) return [fixedChoice(ctx, session.blocks[bi].items[si])];
+    return slotChoices(ctx, slot.roles, null, none).filter((c) => c.id === movementId);
+  })));
+  const best = searchSession(ctx, groups);
+  if (!best) return null;
+  const next = clone(session);
+  next.blocks[blockIndex] = buildBlock(ctx, bt, best.chosen[blockIndex]);
+  if (template.finisher) {
+    const opts = finisherOptions(library, equipment, next);
+    const current = next.finisher ? opts.find((o) => o.id === next.finisher.id) : null;
+    const keep = current && current.ok &&
+      !(current.finisher.no_equipment_alternate && opts.some((o) => o.ok && !o.finisher.no_equipment_alternate));
+    if (!keep) next.finisher = chooseFinisher(ctx, next);
+  } else {
+    next.finisher = null;
+  }
+  return finalize(ctx, next);
 }

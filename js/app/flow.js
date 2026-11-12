@@ -10,6 +10,7 @@
 import {
   generateSession, reroll, trimToLength, validateSession, finisherOptions, nextDayType,
 } from '../engine/index.js';
+import { swapCandidates, swapSlot } from '../engine/index.js';
 
 export function clone(v) {
   return v == null ? v : JSON.parse(JSON.stringify(v));
@@ -60,6 +61,33 @@ export function changeLength({ library, doc, lengthMin }) {
       setting_basis: opt && opt.ok ? opt.basis : null,
     });
   }
+  return { session, violations: check(library, doc, session) };
+}
+
+// Swaps on the unstarted current session. `block` is the block letter ("A"), `slot` the slot
+// index, as in the Today data-block and data-slot hooks.
+function swapParams(library, doc, block, slot) {
+  const s = doc.current;
+  if (!s) throw new Error('No session to swap in');
+  if (isStarted(s)) throw new Error('Swaps happen before Start');
+  const blockIndex = s.blocks.findIndex((b) => b.block === block);
+  if (blockIndex < 0) throw new Error('Unknown block ' + block);
+  return { library, equipment: doc.equipment, sessions: doc.sessions, session: s, blockIndex, slotIndex: Number(slot) };
+}
+
+// -> [{ movementId, item }]: each valid swap with the item it would run (target, load, last time).
+export function swapOptions({ library, doc, block, slot }) {
+  const p = swapParams(library, doc, block, slot);
+  return swapCandidates(p).map((movementId) => ({
+    movementId,
+    item: swapSlot(Object.assign({ movementId, now: null }, p)).blocks[p.blockIndex].items[p.slotIndex],
+  }));
+}
+
+// -> { session, violations }; throws when movementId is not a swap candidate for the slot.
+export function swapMovement({ library, doc, block, slot, movementId, now }) {
+  const p = swapParams(library, doc, block, slot);
+  const session = swapSlot(Object.assign({ movementId, now: iso(now) }, p));
   return { session, violations: check(library, doc, session) };
 }
 
